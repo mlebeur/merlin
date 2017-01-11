@@ -1,0 +1,514 @@
+ChangeLog
+
+=============================================================
+CHANGES AFTER PUBLIC RELEASE OF MERLIN
+=============================================================
+
+MERLIN 1.1.2
+============
+
+  * Fixed bug in handling of large swap files that caused Merlin to
+    crash when certain swap file components exceed 1 GB in size. This
+    bug affected analyses with the --swap option enabled.
+
+  * Added support for gzipped input files to Windows binary versions.
+
+  * Fixed bug that caused trait names in Linkage format files to be lost.
+
+  * Made the --rsq option a little smarter, so that it now avoids 
+    creating LD clusters than induce too many obligate recombinants.
+
+  * Removed extra gibberish from error messages referring to missing 
+    data and pedigree files.
+
+  * Updated examples subdirectory. 
+
+  * Minor code changes to reduce the number of compilation warnings.
+
+MERLIN 1.1.1
+============
+
+  * Simulation of quantitative traits under the alternative hypothesis.
+    This capability described in the reference documentation and is
+    controlled through the --simulate and --trait options. 
+
+  * The new --tabulate option stores results for most common analysis
+    (including linkage and association analyses) in a tab delimited file
+    to facilitate downstream analyses.
+
+  * Most input files can now be provided in .gzip format and will be
+    decompressed on the fly. This ability is not available for Windows
+    platforms.
+
+  * Multiple pedigree and data files can be provided as input. These
+    files should be separated by commas in the command line and must
+    be paired (every pedigree must be matched to a specific data
+    file). For example, if phenotype and genotype data were stored
+    in separate files the command line would look like this:
+
+    merlin -d geno.dat,pheno.dat -p geno.ped,pheno.ped ...
+
+  * Many small bug fixes and improvements in output readability
+
+MERLIN 1.1.0
+============
+  
+  * Integrated quantitative trait association analysis and genotype
+    inference. Merlin can now evaluate evidence for association between
+    a SNP and a quantitative trait in families. If some genotypes are 
+    missing, they will be estimated using information on flanking markers,
+    genotypes for their relatives and (if the markers fall within a
+    cluster of markers in LD), linkage disequilibrium information.
+
+    The approach provides a powerful and rapid test of association 
+    for quantitative traits. 
+
+    For details, see www.sph.umich.edu/csg/abecasis/tour/assoc.html
+
+  * Quantitative trait association analysis and genotype inference
+    for the X chromosome.
+
+  * Covariate lists for variance component-based quantitative trait
+    linkage and association analyses can now be customized for each 
+    trait, using the --custom option. 
+
+  * Support for base pair allele labels. Alleles can now be labelled
+    A, C, T and G in the pedigree file.
+
+  * Packed genotype storage so that each genotype consumes only two 
+    bytes of memory, even for microsatellite data. Large output 
+    pedigrees (from --simulate --swap option) now use less whitespace 
+    to save disk usage.
+
+  * The --reruns (for running multiple rounds of simulation) and -fm
+    (for estimating maximum likelihood allele frequencies) are now
+    available within merlin-regress.
+
+  * Speed improvements in code used to model linkage disequilibrium.
+
+  * Redesigned memory management system, enables Merlin to analyze 
+    more markers than previous versions. The --smallSwap option 
+    reduces swap file and memory usage further by discarding and
+    later recalculating some values. It should never slow Merlin
+    down by > ~50%.
+
+  * Improved handling of founder couple symmetries in parametric
+    linkage analysis. 
+
+  * Code changes to enhance portability, including GCC 4 compilation 
+    support.
+
+  * Extras now include hapmapConverter utility to convert hapmap
+    genotype files into Merlin format.
+
+  * The --sexAsCovariate variable allows sex to be used as a covariate
+    without requiring a duplicate column in the pedigree file. 
+
+MERLIN 1.0.0
+============
+ 
+  * Maximum Likelihood Allele Frequencies. Maximum likelihood estimates
+    of allele frequency are now possible with the -fm command line option.
+
+  * Parametric Analysis with Liability Classes. Parametric linkage analysis
+    now allows for user specified liability classes. Liability classes can
+    be defined according to values of covariates in the pedigree or sex
+    codes.
+
+  * Mersenne Twister Random Number Generator. A better random number 
+    generator is now included in Merlin and especially useful when 
+    producing very large numbers of replicates. 
+
+  * Output Tweaks. Tweaked screen output for runs with very large numbers
+    of markers to improve readability.
+
+  * Haplotype Frequency Estimates for Long Clusters. When a cluster of
+    markers includes >16384 possible haplotypes, Merlin now uses a
+    divide-and-conquer algorithm for haplotype frequency estimation.
+
+  * Bug fix for haplotype sampling option in the presence of LD. Conditional
+    sampling of haplotypes (with the --sample command line option) now 
+    produces correct results even when there are clusters of markers in 
+    linkage disequilibrium.
+
+  * Bug fix to output of IBD estimates for X-linked markers. Fixed bug 
+    that could result in incorrect IBD estimates for some three generation 
+    pedigrees. The bug did not affect other calculations (such as variance
+    components analysis) and lead to incorrect IBD estimates for pairs of
+    individuals including one founder.
+
+  * Changed example input files for parametric linkage analysis to match 
+    example on website tutorial.
+
+MERLIN 1.0.0 (alpha release)
+============================
+
+  * Cluster of Markers in LD.
+    See http://www.sph.umich.edu/csg/abecasis/Merlin/tour/disequilibrium.html
+
+  * Parametric Linkage Analysis.
+    See http://www.sph.umich.edu/csg/abecasis/Merlin/tour/parametric.html
+
+  * Kong and Cox Exponential Model.
+    This is an alternative likelihood-based non-parametric linkage test
+    that is more powerful in samples that include large pedigrees or where
+    large effects are observed.
+
+  * Improved Simulation Capability.
+    Multiple simulations can now be carried out consecutively, using the
+    --reruns option.
+
+  * Automated Trait Model Fitting for Random Samples in Merlin-Regress.
+
+
+MERLIN 0.10.2
+=============
+
+  * Simwalk2 Interface. Updated file formats, for users of the 
+    MENDEL/SIMWALK2/MERLIN interface which allows fast NPL calculations
+    in datasets including large and small pedigrees.
+
+  * Updates to internal allele recoding code.
+
+MERLIN 0.10.1
+=============
+
+  * Case Selection. Cases who are most likely to carry disease alleles
+    can be identified on the bases of allele sharing information. This
+    information can increase the power of follow-up association studies
+    where a single individual per family is genotyped (see Fingerlin et
+    al, AJHG for more details). 
+
+  * Output File Management. Names for output files can now be specified
+    with the --prefix option. For example, when using the --ibd option
+    the default is to generate a [merlin.ibd] file. However, if the 
+    "--prefix foo" option were added to the command line the IBD output
+    file would be called [foo.ibd] instead.
+
+  * Support for multiple trait measurements in MERLIN-REGRESS. If multiple 
+    trait measurements were taken, two columns should be included in
+    the pedigree file for each trait. The standard column with trait
+    measurement should include the average of all measurements for 
+    each subject, a second covariate column should include the number
+    of repeat measurements taken for each subject. This second column
+    should be labelled with the trait name and the prefix "_repeats"
+    appended. (If the trait is called VERBAL_IQ, the number of repeat
+    measurements should be VERBAL_IQ_REPEATS). The testRetest correlation
+    is specified with the testRetest command line parameter.
+
+  * A new version of PedStats. A much improved version of pedstats with
+    better statistics and graphical output is now included. Please see
+    http://www.sph.umich.edu/csg/abecasis/pedstats for details.
+
+  * Per family LOD score contributions in variance components analyses. 
+    When the --vc and --perFamily options are combined, each family's 
+    contribution to the overall LOD score is recorded in the perFamily
+    file.
+
+  * Support for monozygotic twins. Monozygotic twins require a Merlin/QTDT
+    format data and pedigree file with a zygosity column (labelled "Z" in 
+    the data file) and with the code MZ for all monozygotic twins and zero
+    (0) for all other individuals. If there are multiple sets of twins in
+    a sibship, the MZ code should be replaced with a unique odd number for 
+    each twinship.
+
+  * Bug fix in analysis assuming with the --zero recombination fraction. In
+    rare instances where the --zero command line option is specified, the
+    recombination fractions specified in the map file is not zero, and the 
+    first marker in some families is uninformative, previous versions of Merlin
+    allow for recombination between the first marker and the first informative
+    marker.
+
+  * Internal Allele Recoding. A bug whereby allele labels could be lost for
+    some of the alleles described in the original frequency file or linkage
+    format data file but which did not appear in the pedigree. This bug could
+    cause problems when analysing simulated pedigrees where the allele was
+    sampled. 
+
+  * Information content calculations now include completely uninformative
+    families. Previous versions of Merlin calculated information content only
+    within families that were at least partially informative, which could
+    result in slight over-estimates of the actual information content.
+
+MERLIN 0.9.12
+=============
+
+  * Bug fix in variance components analyses for X-linked loci. The kinship
+    coefficient for founder males is now correctly set at 1.0, rather 0.5.
+    This problem most often lead to non-positive definite variance-covariance
+    matrices, but could also lead to inaccurate results.
+
+  * Cleaned up output of --likelihood option.
+
+  * Pedstats now generates pairwise correlation plots for different types
+    of relatives when the --pairs and --pdf options are specified.
+
+MERLIN 0.9.11
+=============
+
+  * Variance Components with Covariates. Fixed memory allocation leak that 
+    caused Merlin to stop when unused covariates present in the pedigree 
+    file. This bug resulted from ongoing re-engineering of the variance 
+    components module to support a simple ascertainment correction.
+
+MERLIN 0.9.10
+=============
+
+  * Added tracking of allele names for alleles that are not present in pedigree.
+    This is required when the --save or --frequencies options are used.
+
+MERLIN 0.9.9
+============
+
+  * Improved Portability. Removed all (void *) to (int) conversions to allow
+    compilation on some 64-bit architectures. In addition, provided replacement
+    snprintf for architectures with a buggy version in the system library.
+
+  * Improved PDF Graph Layout. Graphs in PedStats now provide better handling 
+    of missing data. R^2 in the sib-sib trait and covariate plots has been 
+    replaced by the correlation coefficient r, which is expected to be half 
+    of the heritability for a simple genetic trait.
+
+  * Pedstats/PDF bug fixes. Fixed mislabelling of males and females in breakdown
+    of phenotype scores by sex.
+
+  * Fixed Problems With Internal Allele Recoding. The new allele recoding engine,
+    introduced in version 0.9.8, did not track allele frequencies of the alleles
+    not present in the pedigree file. This could cause Merlin to crash when the 
+    --simulate option was used. 
+
+  * Speed Refinements for Variance Components. Variance components linkage analysis
+    now proceeds faster than in version 0.9.8 and is comparable to version 0.9.3.
+
+MERLIN 0.9.8
+============
+
+  * Basic PDF output. Merlin and Merlin-Regress now produce a simple PDF
+    file with one LOD score plot per page when the --pdf option is used. 
+    Each trait, chromosome and analysis option is plotted on a separate page. 
+
+  * Pedigree Trimming. Merlin and Merlin-Regress can now remove uninformative
+    individuals from pedigrees to speed up analysis. To use this functionality,
+    use the --trim command line option.
+
+  * Microsatellite Allele Sizes. Allele numbers are now recoded internally, 
+    allowing microsatellite allele sizes to be used in the pedigree file.
+
+  * Extended IBD state information. Extended allele IBD state probabilities,
+    which distinguish maternal and paternal allele sharing and provide additional
+    information on inbreeding can now be calculated.
+
+  * Multiple Trait Models for Regression Analyses. MERLIN-REGRESS now accepts an
+    optional table describing mean, variance and heritability for each trait. This
+    facilitates analyses of pedigree files with multiple traits.
+
+  * Founder couple symmetries can be optionally disabled with the --noCoupleBits
+    option.
+
+  * For variance components analysis, fixed bug that led to non-invertible
+    matrices when the parameter estimated variance components are close to 
+    zero. This condition could produce a crash in earlier versions.
+
+  * Fixed bug in Merlin-Regress that caused crashes in families with
+    more than 4 pairs of grand-parents with no phenotype or genotype
+    data. This condition would produce a crash in earlier versions.
+
+  * Fixed aggressive optimization that could cause the --all option (which lists
+    all non-recombinant haplotypes) to miss some haplotype states. Formerly,
+    markers were labelled uninformative whenever they implied identical likelihoods
+    for all inheritance vectors. This version implements a stricter definition
+    that also requires that the same allelic state is implied for each vector.
+
+
+MERLIN 0.9.3
+============
+
+  * Minor source code changes for compatibility with GCC version 3.
+
+  * Horizontal haplotypes are no longer output by default, but 
+    require --horizontal flag.
+
+MERLIN 0.9.2
+============
+
+  * Public release incorporating changes in versions 0.9.0 and 0.9.1.
+
+MERLIN 0.9.1 
+============
+
+  * Added general pedigree regression analysis. This is an early
+    implementation of the approach proposed by Sham et al (2002)
+    in the AJHG. It is still somewhat slow, but functional. Run
+    as a separate program, MERLIN-REGRESS. 
+
+  * Added --horizontal option which selects horizontal haplotype
+    layout in [merlin.chr] output file.
+
+  * Stopped Merlin from automatically loading [merlin.freq] allele
+    frequency file. To load allele frequencies, the -f filename
+    option must be specified explicitly.
+
+  * Added --useCovariates options to support covariates
+    in variance components linkage analyses.
+
+  * Fixed bug that led to crashes when the number of alleles in 
+    the pedigree exceeded those in the allele frequency file by
+    exactly one.
+
+  * Renamed the option --marker-names as --markerNames, for 
+    consistency with other two word options, such as --minStep
+    and --maxStep.
+
+MERLIN 0.9.0 
+============
+
+  * Support for X chromosome incorporated. Runs as a separate
+    program, Merlin In X (MINX). 
+
+  * New --frequencies output option saves allele frequencies as
+    estimated by merlin in merlin.freq file.
+
+  * New --perFamily output option saves information and NPL 
+    scores for individual families in separate files.
+
+  * Quiet output no longer includes warning when markers with
+    very low information are skipped.
+
+  * Input pedigree files now checked for the presence of parents 
+    with identical sexes. If a pedigree file has more than one 
+    formatting problem, Merlin tries to report as many problems
+    as possible before stopping.
+
+  * Linkage datafiles where lines end precisely with "<<" or
+    ">>" now handled correctly. In previous versions, these lines
+    would be rejected by Merlin with an error message.
+
+  * Changed scaling of non-parametric linkage statistics in 
+    Simwalk2 interface file.
+
+  * Minor changes in source code to improve portability. 
+    Specifically, there are no longer any return statements
+    with void arguments or new style type casts. This should
+    allow compilation with Sun Workshop C++ compiler.
+
+  * Minor changes in Makefile to improve portability. 
+    Specifically, ar and ranlib are now invoked separately to
+    allow compilation in Mac OS X systems.
+
+MERLIN 0.8.8
+============
+
+  * Fixed problem reading linkage files with liability class
+    information. Previous versions printed a spurious warning
+    about trailing columns in input pedigree and ignored the
+    last column in input.
+
+MERLIN 0.8.7a
+=============
+
+  * Families with impossible recombination patterns excluded
+    from NPL analyses (previously scored as zero) and variance
+    components analyses.
+
+MERLIN 0.8.7
+============
+
+  * Merlin now estimates kinship between inbred parents and 
+    their offspring (previously assumed to be 0.25).
+
+MERLIN 0.8.6
+============
+
+  * Fixed singlepoint so correct marker names are displayed.
+    (Problem occurred when --steps, --minStep, --maxStep, and
+     --grid, --start and --stop options were introduced)
+
+  * Change optimization default from -O3 to -O2 to avoid
+    crashing gcc-2.95.3.
+
+=============================================================
+CHANGES BEFORE PUBLIC RELEASE OF MERLIN
+=============================================================
+
+MERLIN 0.8.5
+============
+
+  * Added --steps, --minStep, --maxStep as well as --grid,
+    --start and --stop for fine control of analysis locations.
+
+  * The --steps option now replaces the old -i (steps per
+    interval) option.
+
+  * Now includes intermediate output at all markers, even
+    those that map at the same location, for --simwalk2
+    analyses.
+
+  * Fixed in variance components that resulted in non-
+    positive definite matrices in some pedigrees with 
+    uninformative grand-parents. 
+
+  * Added pedwipe to MERLIN distribution.
+
+MERLIN 0.8.3
+============
+
+  * Check whether recombination fractions or centiMorgan
+    distances are provided in linkage datafiles.
+
+MERLIN 0.8.2
+============
+
+  * Maintain ordering for markers separate by the recombination
+    fractions of zero. Previously, the output order for these
+    markers was random. The new version keeps the same order
+    as in the linkage datafile (linkage format) or mapfile
+    (qtdt format)
+
+  * Output IBD probabilities with 5 digit precision.
+
+MERLIN-0.8.1
+============
+
+  * Major editing of tree traversal and construction code to
+    account for changes in operator precedence between gcc
+    version 3.0 and versions 2.95.*.
+
+    (and you thought C++ was pretty well established, eh?)
+
+  * Minor fix to code which optimizes ordering of individuals
+    within pedigrees. No effect on results, but may sometimes
+    speed things up.
+
+MERLIN-0.7.3
+============
+
+  * Catch out of memory errors during haplotyping and gracefully
+    skip to next pedigree.
+
+MERLIN-0.7.1
+============
+
+  * Attempt to recover from memory allocation failures. In 32-bit
+    systems some failures are unrecoverable (e.g., trying to
+    allocate memory blocks > 2GB), so the --megabytes option is
+    necessary so Merlin doesn't try to allocate these huge blocks.
+
+  * The --bits option now replaces the old -b option.
+
+MERLIN-0.6.1
+============
+
+  * Very unlikely genotypes now have scores in scientific notation,
+    e.g., 1e-10 instead of 0.00000.
+
+  * Added support for variance components analysis.
+
+MERLIN-0.5.1
+============
+
+  * First version distributed outside Oxford.
+
+=============================================================
+OLDER VERSIONS OF MERLIN ONLY USED INTERNALLY
+=============================================================
+

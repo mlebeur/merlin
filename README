@@ -1,0 +1,202 @@
+MERLIN - Multipoint Engine for Rapid Likelihood Inference
+(c) 2000 - 2002 Goncalo Abecasis
+
+This document contains two sections: RESTRICTIONS ON USE and BRIEF
+INSTRUCTIONS.
+
+===========================================================================
+RESTRICTIONS FOR USE OF THIS VERSION
+===========================================================================
+
+DISCLAIMER
+==========
+
+This is version of MERLIN is provided to you free of charge.  It comes with
+no guarantees. If you report bugs and provide helpful comments, the next
+version will be better.
+
+BENCHMARKING
+============
+
+This version of Merlin still includes some debug code. We are hoping to 
+gradually improve performance in future releases.
+
+DISTRIBUTION
+============
+
+The latest version of MERLIN is always available at:
+
+   http://www.sph.umich.edu/csg/abecasis/Merlin
+
+If you use MERLIN please register by e-mailing goncalo@umich.edu or filling
+out the web registration form. Redistribution of MERLIN in source or 
+compiled formats is not allowed. 
+
+Code for the Mersenne Twister random number generator is subject to specific
+license conditions -- please see file LICENSE.twister for additional
+information.
+
+============================================================================
+COMPILING AND INSTALLING MERLIN
+============================================================================
+
+Type make and follow instructions. 
+
+============================================================================
+START OF BRIEF INSTRUCTIONS
+============================================================================
+
+A more detailed tutorial is available on the web at:
+
+  http://www.sph.umich.edu/csg/abecasis/Merlin/tour
+
+A summary reference for all Merlin options is available at:
+
+  http://www.sph.umich.edu/csg/abecasis/Merlin/reference.html
+
+INPUT FILES
+===========
+
+Pedigree and data files can be in linkage or QTDT format. For detailed
+descriptions of these formats see http://www.well.ox.ac.uk/asthma/QTDT 
+and http://linkage.rockefeller.edu.
+
+If you use QTDT format input files you will need a separate map file, which
+has the following 3-column format:
+
+CHROMOSOME    MARKER     POSITION
+1             D1S123     134.0
+
+The first column is the chromosome number (1-22), the second the marker name
+(as in the data file) and the third the marker position (in cM). Map files
+do not need to be sorted and include more (or less) markers than present in
+the data file.
+
+To specify input files use:
+
+ >merlin -d datafile -p pedfile 
+
+or
+
+ >merlin -d datafile -p pedfile -m mapfile
+
+
+BASIC ANALYSES
+==============
+
+Basic analysis can be requested on the command line, and include error
+checking (--error), information content (--info) and calculation of ibd and
+kinship matrices (--ibd and --kinship).
+
+LINKAGE ANALYSES
+================
+
+This version includes support for non-parametric linkage only.
+
+Non-parametric analysis are available through the NPL pairs (--pairs) 
+and NPL all (--npl) scoring functions for affecteds only analyses and
+through two analogous distribution free functions for QTL (--qtl and
+--deviate, which assumes phenotypes are mean-centered around zero).
+
+The Kong and Cox function is used to convert non-parametric scores into
+LODs and calculate p-values.
+
+NOTE: Only informative families (eg. with multiple phenotyped individuals 
+and marker data) are considered and this can result in slightly different
+Z-scores than those reported by Genehunter. To get identical Z-scores,
+remove uninformative pedigrees from you Genehunter analysis.
+
+VARIANCE COMPONENTS
+===================
+
+For variance component linkage analyses, use the --vc option. As well as the 
+estimated major gene effect at each chromosomal location, you will get an 
+overall sample heritability.
+
+HAPLOTYPING
+===========
+
+Haplotyping options include finding the best set of inheritance vectors
+(--best) or sampling one such set at random (--sample). Alternatively, all
+non-recombinant haplotypes can be listed by combining the --all and --zero
+options.
+
+To output founder haplotype graphs use the --founders option. For estimation
+of haplotype frequencies with fugue (ASHG 2001), you will want to list all 
+possible sets of non-recombining founder haplotypes:
+
+ > merlin -d datafile -p pedfile --zero --all --founders
+
+REDUCED RECOMBINATION
+=====================
+
+In dense maps, the options --zero, --one, --two and --three limit the number
+of allowed recombinations between consecutive markers.
+
+For single point analysis use the --single option.
+
+SIMULATION
+==========
+
+Marker genotypes can be simulated conditional on the observed missing data
+pattern and genetic map through the --simulate option. If the --save option
+is also used, the simulated pedigree will be output to a file. The simulation
+flags can be combined with any of the other analyses.
+
+Use the random seed option (-r seed) to select a different replicate.
+
+KINSHIP MATRIX PROBABILITIES
+============================
+
+For some types of linkage analysis it is desirable to estimate not only
+pair-wise IBD or kinship coefficients, but probabilities for individual
+IBD or kinship vectors.
+
+Merlin provides this capability with the --matrices option. The output 
+file merlin.kmx includes all non-zero kinship vector probabilities at
+user specified analysis positions. 
+
+These kinship vectors specify the kinship between every pair of 
+individuals with alleles (i, j) and (k, l) as I(i == j) + I(i == k) +
+I(j == k) + I(j == l). To conserve space, relative pairs with invariant
+kinship coefficients (such as non-inbred parent-offspring pairs are 
+not included in the output).
+
+CONTROLLING RESOURCE USAGE
+==========================
+
+You can instruct Merlin not to tackle big pedigrees through the --bits 
+and --megabytes options. In any case, Merlin will try to gracefully
+skip pedigrees when it runs out of memory. Note that on some 32-bit
+systems attempting to allocate blocks of > 2048MB will result in a 
+crash. To avoid this problem, set --megabytes:2048 in the command 
+line when analysing large pedigrees.
+
+For example, to automatically skip pedigrees with complexity greater than
+16 bits use the --bits:16 option.
+
+To restrict gene flow tree memory allocation to 256 megabytes, use the
+--megabytes:256 option. It is often a good idea to set this number to 
+the size of available physical memory (or perhaps a little larger).
+
+To reduce memory usage use the --swap option.
+
+HYBRID ANALYSES WITH SIMWALK2
+=============================
+
+These are implemented through a version of Dan Week's pedigree analysis 
+swiss knife, Mega2, that is currently under development.
+
+=========================================================================
+REFERENCE
+=========================================================================
+
+GR Abecasis, SS Cherny, WOC Cookson and LR Cardon (2002)
+MERLIN - Rapid analysis of dense genetic maps using sparse gene flow trees.
+Nature Genetics 30:97-101
+
+
+
+
+Goncalo Abecasis
+goncalo@umich.edu
